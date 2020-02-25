@@ -69,8 +69,12 @@ WSGI_APPLICATION = 'HSESupporterBackend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd9c8qb2n2vtifk',
+        'USER': 'rextircvkkxqdf',
+        'PASSWORD': 'e870039d0f852e3e8a135269f9d46f89d31b5c98a4e1c6908e6dc4460ad2f650',
+        'HOST': 'ec2-54-247-125-38.eu-west-1.compute.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
