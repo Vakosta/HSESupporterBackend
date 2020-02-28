@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import signals
+from django.dispatch import receiver
 
 
 class Problem(models.Model):
@@ -55,9 +57,31 @@ class Dormitory(models.Model):
                             max_length=200)
     address = models.CharField(verbose_name='адрес',
                                max_length=500)
-    students = models.ManyToManyField(User,
-                                      verbose_name='студенты')
 
     class Meta:
         verbose_name = 'общежитие'
         verbose_name_plural = 'общежития'
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(verbose_name='пользователь',
+                                to=User,
+                                on_delete=models.CASCADE)
+    dormitory = models.ForeignKey(verbose_name='общежитие',
+                                  to=Dormitory,
+                                  on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'профиль'
+        verbose_name_plural = 'профили'
+
+
+@receiver(signals.post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+
+@receiver(signals.post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()

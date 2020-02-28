@@ -2,6 +2,9 @@ from django.contrib import admin
 
 from api import models
 
+admin.site.site_title = 'ВШЭ'
+admin.site.site_header = 'Администрирование общежитий ВШЭ'
+
 
 @admin.register(models.Problem)
 class ProblemAdmin(admin.ModelAdmin):
@@ -51,5 +54,19 @@ class DormitoryAdmin(admin.ModelAdmin):
     search_fields = (
         'name',
         'address',
-        'students',
+    )
+
+
+@admin.register(models.Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = (
+        'user',
+        'dormitory',
+    )
+    search_fields = (
+        'user',
+        'dormitory',
+    )
+    list_filter = (
+        'dormitory',
     )
