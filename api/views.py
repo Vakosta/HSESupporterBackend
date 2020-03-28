@@ -63,13 +63,10 @@ class DormitoriesViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'head']
 
     def get_queryset(self):
-        if self.request.user.is_authenticated:
-            try:
-                return models.Dormitory.objects.all()
-            except TypeError:
-                raise exceptions.Unauthorized()
-        else:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        try:
+            return models.Dormitory.objects.all()
+        except TypeError:
+            raise exceptions.Unauthorized()
 
     def get(self, request):
         if request.user is not None:

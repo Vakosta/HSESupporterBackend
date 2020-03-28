@@ -37,4 +37,4 @@ class MessageSerializer(serializers.HyperlinkedModelSerializer):
 class DormitorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Dormitory
-        fields = ['name', 'address', 'students']
+        fields = ['name', 'address']
