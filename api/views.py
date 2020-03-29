@@ -24,6 +24,9 @@ class ProblemViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         try:
+            if request.data['status'] is None:
+                request.data['status'] = models.Problem.Status.OPEN
+
             models.Problem.objects.create(
                 author=request.user,
                 title=request.data['title'],
