@@ -69,6 +69,8 @@ class Profile(models.Model):
                                 on_delete=models.CASCADE)
     dormitory = models.ForeignKey(verbose_name='общежитие',
                                   to=Dormitory,
+                                  null=True,
+                                  blank=True,
                                   on_delete=models.CASCADE)
 
     class Meta:
