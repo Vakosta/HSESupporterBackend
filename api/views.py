@@ -37,6 +37,17 @@ class ProblemViewSet(viewsets.ModelViewSet):
         except Exception:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
+    def destroy(self, request, *args, **kwargs):
+        try:
+            idd = request.id
+            author = request.user,
+
+            models.Problem.delete(idd)
+
+            return Response(status=status.HTTP_201_CREATED)
+        except Exception:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
 class MessagesViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MessageSerializer
