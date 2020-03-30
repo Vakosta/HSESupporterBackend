@@ -40,11 +40,11 @@ class ProblemViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         try:
             pk = int(kwargs['pk'])
-            author = request.user,
+            author = request.user
 
             models.Problem.objects.get(id=pk).delete()
 
-            return Response(status=status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_200_OK)
         except Exception:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
