@@ -33,6 +33,7 @@ class ProblemViewSet(viewsets.ModelViewSet):
                 description=request.data['description'],
                 status=request.data['status']
             )
+
             return Response(status=status.HTTP_201_CREATED)
         except Exception:
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -67,6 +68,7 @@ class MessagesViewSet(viewsets.ModelViewSet):
                 author=request.user,
                 text=request.data['text']
             )
+
             return Response(status=status.HTTP_201_CREATED)
         except Exception:
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -79,6 +81,22 @@ class DormitoriesViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         try:
             return models.Dormitory.objects.all()
+        except TypeError:
+            raise exceptions.Unauthorized()
+
+    def get(self, request):
+        if request.user is not None:
+            return Response(self.serializer_class.data)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+class NoticesViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.NoticeSerializer
+
+    def get_queryset(self):
+        try:
+            return models.Notice.objects.all()
         except TypeError:
             raise exceptions.Unauthorized()
 

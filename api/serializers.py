@@ -19,22 +19,61 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'url', 'username', 'password', 'email', 'groups']
+        fields = [
+            'id',
+            'url',
+            'username',
+            'password',
+            'email',
+            'groups'
+        ]
 
 
 class ProblemSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Problem
-        fields = ['id', 'author', 'title', 'description', 'status', 'created_at', 'updated_at']
+        fields = [
+            'id',
+            'author',
+            'title',
+            'description',
+            'status',
+            'created_at',
+            'updated_at'
+        ]
 
 
 class MessageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Message
-        fields = ['id', 'author', 'text', 'is_read', 'created_at', 'updated_at']
+        fields = [
+            'id',
+            'author',
+            'text',
+            'is_read',
+            'created_at',
+            'updated_at'
+        ]
 
 
 class DormitorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Dormitory
-        fields = ['id', 'name', 'address']
+        fields = [
+            'id',
+            'name',
+            'address'
+        ]
+
+
+class NoticeSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = models.Notice
+        fields = [
+            'id',
+            'main_text',
+            'text',
+            'is_important',
+            'created_at',
+            'updated_at'
+        ]

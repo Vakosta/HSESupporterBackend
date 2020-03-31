@@ -70,3 +70,23 @@ class ProfileAdmin(admin.ModelAdmin):
     list_filter = (
         'dormitory',
     )
+
+
+@admin.register(models.Notice)
+class NoticeAdmin(admin.ModelAdmin):
+    list_display = (
+        'main_text',
+        'is_important',
+        'created_at',
+    )
+    search_fields = (
+        'main_text',
+        'text',
+    )
+    list_filter = (
+        'is_important',
+    )
+    readonly_fields = (
+        'created_at',
+        'updated_at',
+    )

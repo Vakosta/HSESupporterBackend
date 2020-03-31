@@ -29,8 +29,8 @@ class Problem(models.Model):
                                       auto_now=True)
 
     class Meta:
-        verbose_name = 'проблема'
-        verbose_name_plural = 'проблемы'
+        verbose_name = 'обращение'
+        verbose_name_plural = 'обращения'
 
 
 class Message(models.Model):
@@ -76,6 +76,24 @@ class Profile(models.Model):
     class Meta:
         verbose_name = 'профиль'
         verbose_name_plural = 'профили'
+
+
+class Notice(models.Model):
+    main_text = models.CharField(verbose_name='главный текст',
+                                 max_length=200)
+    text = models.TextField(verbose_name='текст',
+                            max_length=10000)
+    is_important = models.BooleanField(verbose_name='важное ли',
+                                       default=False)
+
+    created_at = models.DateTimeField(verbose_name='дата создания',
+                                      auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name='дата обновление',
+                                      auto_now=True)
+
+    class Meta:
+        verbose_name = 'объявление'
+        verbose_name_plural = 'объявления'
 
 
 @receiver(signals.post_save, sender=User)
