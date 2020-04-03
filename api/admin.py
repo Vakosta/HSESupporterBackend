@@ -37,9 +37,11 @@ class MessageAdmin(admin.ModelAdmin):
     search_fields = (
         'text',
         'author',
+        'problem',
     )
     list_filter = (
         'is_read',
+        'is_from_student',
     )
     readonly_fields = (
         'created_at',
