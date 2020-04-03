@@ -29,7 +29,9 @@ class MessageAdmin(admin.ModelAdmin):
     list_display = (
         'text',
         'author',
+        'problem',
         'is_read',
+        'is_from_student',
         'created_at',
     )
     search_fields = (

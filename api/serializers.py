@@ -29,7 +29,23 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
-class ProblemSerializer(serializers.HyperlinkedModelSerializer):
+class MessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Message
+        fields = [
+            'id',
+            'author',
+            'text',
+            'is_read',
+            'is_from_student',
+            'created_at',
+            'updated_at'
+        ]
+
+
+class ProblemSerializer(serializers.ModelSerializer):
+    messages = MessageSerializer(many=True)
+
     class Meta:
         model = models.Problem
         fields = [
@@ -39,20 +55,8 @@ class ProblemSerializer(serializers.HyperlinkedModelSerializer):
             'description',
             'status',
             'created_at',
-            'updated_at'
-        ]
-
-
-class MessageSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = models.Message
-        fields = [
-            'id',
-            'author',
-            'text',
-            'is_read',
-            'created_at',
-            'updated_at'
+            'updated_at',
+            'messages',
         ]
 
 

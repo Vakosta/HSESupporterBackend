@@ -41,6 +41,14 @@ class Message(models.Model):
                             max_length=10000)
     is_read = models.BooleanField(verbose_name='прочитано',
                                   default=False)
+    is_from_student = models.BooleanField(verbose_name='от студента ли',
+                                          default=True)
+    problem = models.ForeignKey(verbose_name='обращение',
+                                to=Problem,
+                                null=True,
+                                related_name='messages',
+                                blank=True,
+                                on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(verbose_name='дата создания',
                                       auto_now_add=True)
