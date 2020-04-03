@@ -15,7 +15,7 @@ class ProblemViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         try:
-            return models.Problem.objects.all()
+            return models.Problem.objects.all().order_by('-id')
         except TypeError:
             raise exceptions.Unauthorized()
 
@@ -96,7 +96,7 @@ class NoticesViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         try:
-            return models.Notice.objects.all()
+            return models.Notice.objects.all().order_by('-id')
         except TypeError:
             raise exceptions.Unauthorized()
 
