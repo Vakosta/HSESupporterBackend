@@ -55,7 +55,7 @@ class MessagesViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         try:
-            return models.Message.objects.all()
+            return models.Message.objects.all().order_by('id')
         except TypeError:
             raise exceptions.Unauthorized()
 
