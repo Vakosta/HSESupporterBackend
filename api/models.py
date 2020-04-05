@@ -33,6 +33,17 @@ class Problem(models.Model):
         verbose_name_plural = 'обращения'
 
 
+class Dormitory(models.Model):
+    name = models.CharField(verbose_name='имя общежития',
+                            max_length=200)
+    address = models.CharField(verbose_name='адрес',
+                               max_length=500)
+
+    class Meta:
+        verbose_name = 'общежитие'
+        verbose_name_plural = 'общежития'
+
+
 class Message(models.Model):
     author = models.ForeignKey(verbose_name='автор',
                                to=User,
@@ -49,6 +60,12 @@ class Message(models.Model):
                                 related_name='messages',
                                 blank=True,
                                 on_delete=models.CASCADE)
+    dormitory = models.ForeignKey(verbose_name='общежитие',
+                                  to=Dormitory,
+                                  null=True,
+                                  related_name='messages',
+                                  blank=True,
+                                  on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(verbose_name='дата создания',
                                       auto_now_add=True)
@@ -58,17 +75,6 @@ class Message(models.Model):
     class Meta:
         verbose_name = 'сообщение'
         verbose_name_plural = 'сообщения'
-
-
-class Dormitory(models.Model):
-    name = models.CharField(verbose_name='имя общежития',
-                            max_length=200)
-    address = models.CharField(verbose_name='адрес',
-                               max_length=500)
-
-    class Meta:
-        verbose_name = 'общежитие'
-        verbose_name_plural = 'общежития'
 
 
 class Profile(models.Model):

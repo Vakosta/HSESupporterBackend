@@ -44,7 +44,6 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class ProblemSerializer(serializers.ModelSerializer):
-    # messages = MessageSerializer(many=True)
     messages = serializers.SerializerMethodField()
 
     class Meta:
@@ -66,13 +65,20 @@ class ProblemSerializer(serializers.ModelSerializer):
 
 
 class DormitorySerializer(serializers.HyperlinkedModelSerializer):
+    messages = serializers.SerializerMethodField()
+
     class Meta:
         model = models.Dormitory
         fields = [
             'id',
             'name',
-            'address'
+            'address',
+            'messages'
         ]
+
+    def get_messages(self, obj):
+        ordered_queryset = models.Message.objects.filter(dormitory_id=obj.id).order_by('id')[:20]
+        return MessageSerializer(ordered_queryset, many=True, context=self.context).data
 
 
 class NoticeSerializer(serializers.HyperlinkedModelSerializer):

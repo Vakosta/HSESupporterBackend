@@ -30,6 +30,7 @@ class MessageAdmin(admin.ModelAdmin):
         'text',
         'author',
         'problem',
+        'dormitory',
         'is_read',
         'is_from_student',
         'created_at',
