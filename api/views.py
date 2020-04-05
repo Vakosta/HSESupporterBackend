@@ -66,7 +66,8 @@ class MessagesViewSet(viewsets.ModelViewSet):
         try:
             models.Message.objects.create(
                 author=request.user,
-                text=request.data['text']
+                text=request.data['text'],
+                problem_id=request.data['problem']
             )
 
             return Response(status=status.HTTP_201_CREATED)
