@@ -15,7 +15,7 @@ class ProblemViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         try:
-            return models.Problem.objects.all().order_by('-id')
+            return models.Problem.objects.all().order_by('-id').filter(author=self.request.user.id)
         except TypeError:
             raise exceptions.Unauthorized()
 
