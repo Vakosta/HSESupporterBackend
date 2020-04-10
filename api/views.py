@@ -68,10 +68,15 @@ class MessagesViewSet(viewsets.ModelViewSet):
             if 'problem' in request.data:
                 problem = request.data['problem']
 
+            dormitory = None
+            if 'dormitory' in request.data:
+                dormitory = request.data['dormitory']
+
             models.Message.objects.create(
                 author=request.user,
                 text=request.data['text'],
-                problem_id=problem
+                problem_id=problem,
+                dormitory_id=dormitory
             )
 
             return Response(status=status.HTTP_201_CREATED)
