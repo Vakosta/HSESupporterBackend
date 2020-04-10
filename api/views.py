@@ -64,10 +64,14 @@ class MessagesViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         try:
+            problem = None
+            if 'problem' in request.data:
+                problem = request.data['problem']
+
             models.Message.objects.create(
                 author=request.user,
                 text=request.data['text'],
-                problem_id=request.data['problem']
+                problem_id=problem
             )
 
             return Response(status=status.HTTP_201_CREATED)
