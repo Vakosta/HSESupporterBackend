@@ -80,8 +80,8 @@ class MessagesViewSet(viewsets.ModelViewSet):
             )
 
             return Response(status=status.HTTP_201_CREATED)
-        except Exception:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        except Exception as ex:
+            return Response({"Fail": ex}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class DormitoriesViewSet(viewsets.ModelViewSet):
