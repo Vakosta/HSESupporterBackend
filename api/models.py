@@ -127,7 +127,7 @@ class Profile(models.Model):
         verbose_name_plural = 'профили'
 
     def __str__(self):
-        return self.user
+        return self.user.email
 
 
 class Confirmation(models.Model):
