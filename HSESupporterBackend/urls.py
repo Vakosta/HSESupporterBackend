@@ -18,5 +18,5 @@ urlpatterns = [
     path('auth/register/', views.AuthView.as_view()),
     path('auth/register/confirm-email/', views.AuthConfirmView.as_view()),
 
-    path('auth/joser/', include('djoser.urls.authtoken')),
+    path('auth/', include('djoser.urls.authtoken')),
 ]
