@@ -1,16 +1,20 @@
 import asyncio
+import random
 import string
 
 import aioruz
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
-from django.utils.crypto import get_random_string
 from rest_framework import viewsets, status, views
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 
 from api import models, serializers, exceptions
 from api.exceptions import WrongEmail, CodeConfirmationException
+
+
+def get_rnd(length=10):
+    return ''.join(random.SystemRandom().choices(string.ascii_letters + string.digits, k=length))
 
 
 async def get_student_by_email_async(email):
@@ -35,17 +39,18 @@ class AuthView(views.APIView):
             if student is None:
                 raise WrongEmail
 
-            code = get_random_string(length=6, allowed_chars='1234567890')
+            code = get_rnd(6)
             models.Confirmation.objects.create(
                 email=email,
                 code=code,
             )
 
-            User.objects.create_user(
-                email=email,
-                username=email,
-                password='thisishadrkey'
-            )
+            if len(models.User.objects.filter(email=email)) == 0:
+                User.objects.create_user(
+                    email=email,
+                    username=email,
+                    password='thisishadrkey'
+                )
 
             send_mail('Код подтверждения',
                       'Ваш код подтверждения: {}'.format(code),
@@ -67,10 +72,10 @@ class AuthView(views.APIView):
             return Response({'message': e.default_detail}, status=e.status_code)
 
         except KeyError as e:
-            return Response({'message': 'Вы не передали один из параметров'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
-            return Response({'message': e}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AuthConfirmView(views.APIView):
@@ -83,20 +88,25 @@ class AuthConfirmView(views.APIView):
             if student is None:
                 raise WrongEmail
 
-            confirmation = models.Confirmation.objects.get(email=email, code=code)
-            if confirmation is None:
+            if len(models.Confirmation.objects.filter(email=email, code=code)) == 0:
                 raise CodeConfirmationException
-            confirmation.delete()
+            confirmation = list(models.Confirmation.objects.filter(email=email, code=code))[0]
+            # confirmation.delete()
 
             user = models.User.objects.get(email=email)
             if user is None:
                 raise CodeConfirmationException
+            user.profile.is_login = True
+            user.save()
 
-            token = get_random_string(length=6, allowed_chars=(string.ascii_letters + string.digits))
-            Token.objects.create(
-                user=user,
-                key=token,
-            )
+            if len(Token.objects.filter(user=user)) == 0:
+                token = get_rnd(40)
+                Token.objects.create(
+                    user=user,
+                    key=token,
+                )
+            else:
+                token = list(Token.objects.filter(user=user))[0].key
 
             return Response(
                 {
@@ -115,10 +125,10 @@ class AuthConfirmView(views.APIView):
             return Response({'message': e.default_detail}, status=e.status_code)
 
         except KeyError as e:
-            return Response({'message': 'Вы не передали один из параметров'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
-            return Response({'message': e}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class DormitoriesViewSet(viewsets.ModelViewSet):
