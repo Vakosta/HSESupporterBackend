@@ -1,10 +1,12 @@
 import asyncio
+import string
 
 import aioruz
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
 from rest_framework import viewsets, status, views
+from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 
 from api import models, serializers, exceptions
@@ -29,13 +31,11 @@ class AuthView(views.APIView):
     def post(self, request):
         try:
             email = request.data['email']
-
             student = get_student_by_email(email)
             if student is None:
                 raise WrongEmail
 
             code = get_random_string(length=6, allowed_chars='1234567890')
-
             models.Confirmation.objects.create(
                 email=email,
                 code=code,
@@ -84,15 +84,24 @@ class AuthConfirmView(views.APIView):
                 raise WrongEmail
 
             confirmation = models.Confirmation.objects.get(email=email, code=code)
-
             if confirmation is None:
                 raise CodeConfirmationException
-
             confirmation.delete()
+
+            user = models.User.objects.get(email=email)
+            if user is None:
+                raise CodeConfirmationException
+
+            token = get_random_string(length=6, allowed_chars=(string.ascii_letters + string.digits))
+            Token.objects.create(
+                user=user,
+                key=token,
+            )
 
             return Response(
                 {
                     'message': 'Успешная авторизация.',
+                    'token': token,
                     'student': {
                         'fio': student['fio'],
                         'info': student['info'],
