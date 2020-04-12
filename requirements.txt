@@ -1,9 +1,9 @@
+psycopg2-binary==2.8.5
+whitenoise==5.0.1
 gunicorn==20.0.4
-psycopg2-binary==2.8.4
-django==3.0.4
-whitenoise
+django==3.0.5
 djangorestframework==3.11.0
-markdown==3.2.1
 django-filter==2.2.0
-djoser
+markdown==3.2.1
+djoser==2.0.3
 aioruz==0.8.0
