@@ -110,6 +110,17 @@ class Notice(models.Model):
         verbose_name_plural = 'объявления'
 
 
+class Confirmation(models.Model):
+    email = models.CharField(verbose_name='Email',
+                             max_length=40)
+    code = models.CharField(verbose_name='код подтверждения',
+                            max_length=10)
+
+    class Meta:
+        verbose_name = 'подтверждение'
+        verbose_name_plural = 'подтверждения'
+
+
 @receiver(signals.post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:

@@ -95,3 +95,15 @@ class NoticeAdmin(admin.ModelAdmin):
         'created_at',
         'updated_at',
     )
+
+
+@admin.register(models.Confirmation)
+class ConfirmationAdmin(admin.ModelAdmin):
+    list_display = (
+        'email',
+        'code',
+    )
+    search_fields = (
+        'email',
+        'code',
+    )

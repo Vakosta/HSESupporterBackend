@@ -5,6 +5,7 @@ from rest_framework import routers
 from api import views
 
 router = routers.DefaultRouter()
+
 # router.register(r'users', views.UserViewSet)
 router.register(r'notices', views.NoticesViewSet, basename='Notices')
 router.register(r'problems', views.ProblemViewSet, basename='Problems')
@@ -12,8 +13,12 @@ router.register(r'messages', views.MessagesViewSet, basename='Messages')
 router.register(r'dormitories', views.DormitoriesViewSet, basename='Dormitories')
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', include(router.urls)),
+    path('admin/', admin.site.urls),
+
+    path('auth/register/', views.AuthView.as_view()),
+    path('auth/register/confirm-email/', views.AuthConfirmView.as_view()),
+
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api/auth/', include('djoser.urls.authtoken')),
 ]

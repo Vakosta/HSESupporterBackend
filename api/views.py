@@ -3,11 +3,13 @@ import asyncio
 import aioruz
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
-from rest_framework import viewsets, status
+from django.utils.crypto import get_random_string
+from rest_framework import viewsets, status, views
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from api import models, serializers, exceptions
+from api.exceptions import WrongEmail, CodeConfirmationException
 from api.serializers import UserSerializer
 
 
@@ -23,6 +25,93 @@ def get_student_by_email(email):
     loop = asyncio.new_event_loop()
     result = loop.run_until_complete(get_student_by_email_async(email))
     return result
+
+
+class AuthView(views.APIView):
+    def post(self, request):
+        try:
+            email = request.data['email']
+
+            student = get_student_by_email(email)
+            if student is None:
+                raise WrongEmail
+
+            code = get_random_string(length=6, allowed_chars='1234567890')
+
+            models.Confirmation.objects.create(
+                email=email,
+                code=code,
+            )
+
+            User.objects.create_user(
+                email=email,
+                username=email,
+                password='thisishadrkey'
+            )
+
+            send_mail('Код подтверждения',
+                      'Ваш код подтверждения: {}'.format(code),
+                      'confrim@hsesupporter.ru',
+                      [email],
+                      fail_silently=False)
+
+            return Response(
+                {
+                    'message': 'Код подтверждения отправлен на почту.',
+                    'student': {
+                        'fio': student['fio'],
+                        'info': student['info'],
+                    },
+                },
+                status=status.HTTP_200_OK)
+
+        except WrongEmail as e:
+            return Response({'message': e.default_detail}, status=e.status_code)
+
+        except KeyError as e:
+            return Response({'message': 'Вы не передали один из параметров'}, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            return Response({'message': e}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AuthConfirmView(views.APIView):
+    def post(self, request):
+        try:
+            email = request.data['email']
+            code = request.data['code']
+
+            student = get_student_by_email(email)
+            if student is None:
+                raise WrongEmail
+
+            confirmation = models.Confirmation.objects.get(email=email, code=code)
+
+            if confirmation is None:
+                raise CodeConfirmationException
+
+            confirmation.delete()
+
+            return Response(
+                {
+                    'message': 'Успешная авторизация.',
+                    'student': {
+                        'fio': student['fio'],
+                        'info': student['info'],
+                    },
+                }, status=status.HTTP_200_OK)
+
+        except CodeConfirmationException as e:
+            return Response({'message': e.default_detail}, status=e.status_code)
+
+        except WrongEmail as e:
+            return Response({'message': e.default_detail}, status=e.status_code)
+
+        except KeyError as e:
+            return Response({'message': 'Вы не передали один из параметров'}, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            return Response({'message': e}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -109,8 +198,7 @@ class MessagesViewSet(viewsets.ModelViewSet):
 def create_auth(request):
     serialized = UserSerializer(data=request.DATA)
     if serialized.is_valid():
-        send_mail('Код подтверждения', 'Ваш код подтверждения.', 'confrim@hsesupporter.ru',
-                  ['vaannenkov@edu.hse.ru'], fail_silently=False)
+
         User.objects.create_user(
             serialized.init_data['email'],
             serialized.init_data['username'],
