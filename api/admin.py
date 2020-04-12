@@ -62,21 +62,6 @@ class DormitoryAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(models.Profile)
-class ProfileAdmin(admin.ModelAdmin):
-    list_display = (
-        'user',
-        'dormitory',
-    )
-    search_fields = (
-        'user',
-        'dormitory',
-    )
-    list_filter = (
-        'dormitory',
-    )
-
-
 @admin.register(models.Notice)
 class NoticeAdmin(admin.ModelAdmin):
     list_display = (
@@ -94,6 +79,25 @@ class NoticeAdmin(admin.ModelAdmin):
     readonly_fields = (
         'created_at',
         'updated_at',
+    )
+
+
+@admin.register(models.Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = (
+        'user',
+        'dormitory',
+        'is_login',
+        'is_accept',
+    )
+    search_fields = (
+        'user',
+        'dormitory',
+    )
+    list_filter = (
+        'dormitory',
+        'is_login',
+        'is_accept',
     )
 
 

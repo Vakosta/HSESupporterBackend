@@ -4,6 +4,20 @@ from django.db.models import signals
 from django.dispatch import receiver
 
 
+class Dormitory(models.Model):
+    name = models.CharField(verbose_name='имя общежития',
+                            max_length=200)
+    address = models.CharField(verbose_name='адрес',
+                               max_length=500)
+
+    class Meta:
+        verbose_name = 'общежитие'
+        verbose_name_plural = 'общежития'
+
+    def __str__(self):
+        return self.name
+
+
 class Problem(models.Model):
     class Status(models.TextChoices):
         OPEN = 'O', 'Открыта'
@@ -32,16 +46,8 @@ class Problem(models.Model):
         verbose_name = 'обращение'
         verbose_name_plural = 'обращения'
 
-
-class Dormitory(models.Model):
-    name = models.CharField(verbose_name='имя общежития',
-                            max_length=200)
-    address = models.CharField(verbose_name='адрес',
-                               max_length=500)
-
-    class Meta:
-        verbose_name = 'общежитие'
-        verbose_name_plural = 'общежития'
+    def __str__(self):
+        return '{}: {}'.format(self.author, self.title[:17])
 
 
 class Message(models.Model):
@@ -76,20 +82,8 @@ class Message(models.Model):
         verbose_name = 'сообщение'
         verbose_name_plural = 'сообщения'
 
-
-class Profile(models.Model):
-    user = models.OneToOneField(verbose_name='пользователь',
-                                to=User,
-                                on_delete=models.CASCADE)
-    dormitory = models.ForeignKey(verbose_name='общежитие',
-                                  to=Dormitory,
-                                  null=True,
-                                  blank=True,
-                                  on_delete=models.CASCADE)
-
-    class Meta:
-        verbose_name = 'профиль'
-        verbose_name_plural = 'профили'
+    def __str__(self):
+        return '{}: {}'.format(self.author, self.text[:17])
 
 
 class Notice(models.Model):
@@ -109,6 +103,32 @@ class Notice(models.Model):
         verbose_name = 'объявление'
         verbose_name_plural = 'объявления'
 
+    def __str__(self):
+        return '{}'.format(self.main_text[:25])
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(verbose_name='пользователь',
+                                to=User,
+                                on_delete=models.CASCADE)
+    dormitory = models.ForeignKey(verbose_name='общежитие',
+                                  to=Dormitory,
+                                  null=True,
+                                  blank=True,
+                                  on_delete=models.CASCADE)
+
+    is_login = models.BooleanField(verbose_name='был ли первый вход',
+                                   default=False)
+    is_accept = models.BooleanField(verbose_name='подтверждён ли администратором',
+                                    default=False)
+
+    class Meta:
+        verbose_name = 'профиль'
+        verbose_name_plural = 'профили'
+
+    def __str__(self):
+        return self.user
+
 
 class Confirmation(models.Model):
     email = models.CharField(verbose_name='Email',
@@ -119,6 +139,9 @@ class Confirmation(models.Model):
     class Meta:
         verbose_name = 'подтверждение'
         verbose_name_plural = 'подтверждения'
+
+    def __str__(self):
+        return '{} — {}'.format(self.email, self.code)
 
 
 @receiver(signals.post_save, sender=User)
