@@ -29,41 +29,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
-class MessageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Message
-        fields = [
-            'id',
-            'author',
-            'text',
-            'is_read',
-            'is_from_student',
-            'created_at',
-            'updated_at'
-        ]
-
-
-class ProblemSerializer(serializers.ModelSerializer):
-    messages = serializers.SerializerMethodField()
-
-    class Meta:
-        model = models.Problem
-        fields = [
-            'id',
-            'author',
-            'title',
-            'description',
-            'status',
-            'created_at',
-            'updated_at',
-            'messages',
-        ]
-
-    def get_messages(self, obj):
-        ordered_queryset = models.Message.objects.filter(problem_id=obj.id).order_by('id')
-        return MessageSerializer(ordered_queryset, many=True, context=self.context).data
-
-
 class DormitorySerializer(serializers.HyperlinkedModelSerializer):
     messages = serializers.SerializerMethodField()
 
@@ -79,6 +44,50 @@ class DormitorySerializer(serializers.HyperlinkedModelSerializer):
     def get_messages(self, obj):
         ordered_queryset = models.Message.objects.filter(dormitory_id=obj.id).order_by('id')[:20]
         return MessageSerializer(ordered_queryset, many=True, context=self.context).data
+
+
+class ProblemSerializer(serializers.ModelSerializer):
+    messages = serializers.SerializerMethodField()
+    author_first_name = serializers.CharField(source='author.first_name')
+    author_last_name = serializers.CharField(source='author.last_name')
+
+    class Meta:
+        model = models.Problem
+        fields = [
+            'id',
+            'author',
+            'author_first_name',
+            'author_last_name',
+            'title',
+            'description',
+            'status',
+            'created_at',
+            'updated_at',
+            'messages',
+        ]
+
+    def get_messages(self, obj):
+        ordered_queryset = models.Message.objects.filter(problem_id=obj.id).order_by('id')
+        return MessageSerializer(ordered_queryset, many=True, context=self.context).data
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    author_first_name = serializers.CharField(source='author.first_name')
+    author_last_name = serializers.CharField(source='author.last_name')
+
+    class Meta:
+        model = models.Message
+        fields = [
+            'id',
+            'author',
+            'author_first_name',
+            'author_last_name',
+            'text',
+            'is_read',
+            'is_from_student',
+            'created_at',
+            'updated_at'
+        ]
 
 
 class NoticeSerializer(serializers.HyperlinkedModelSerializer):
