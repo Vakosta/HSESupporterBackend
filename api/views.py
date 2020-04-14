@@ -10,7 +10,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 
 from api import models, serializers, exceptions
-from api.exceptions import WrongEmail, CodeConfirmationException
+from api.exceptions import WrongEmail, CodeConfirmationException, Unauthorized
 
 
 def get_rnd(length=10):
@@ -130,6 +130,24 @@ class AuthConfirmView(views.APIView):
 
         except Exception as e:
             return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AcceptStatusView(views.APIView):
+    def get(self, request):
+        try:
+            user = request.user
+
+            if user.id is None:
+                raise Unauthorized
+
+            return Response({
+                'is_accept': user.profile.is_accept
+            }, status=status.HTTP_200_OK)
+
+        except Unauthorized as e:
+            return Response({
+                'message': e.default_detail
+            }, status=e.status_code)
 
 
 class DormitoriesViewSet(viewsets.ModelViewSet):
