@@ -6,7 +6,8 @@
   - Параметры: `email`.
 - _POST_ `/auth/register/confirm-email/` — подтверждение регистрации.
   - Параметры: `email`, `code`.
-- _POST_ `/auth/token/login` — авторизация пользователя.
+- _POST_ `/auth/token/login/` — авторизация пользователя.
+- _POST_ `/auth/accept-status/` — проверка одобрения администрацией.
 
 ---
 
