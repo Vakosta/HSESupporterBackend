@@ -111,6 +111,7 @@ class AuthConfirmView(views.APIView):
             return Response(
                 {
                     'message': 'Успешная авторизация.',
+                    'is_accept': user.profile.is_accept,
                     'token': token,
                     'student': {
                         'fio': student['fio'],
