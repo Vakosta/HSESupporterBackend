@@ -61,7 +61,7 @@ class AuthView(views.APIView):
             return Response(
                 {
                     'message': 'Код подтверждения отправлен на почту.',
-                    'student': {
+                    'profile': {
                         'fio': student['fio'],
                         'info': student['info'],
                     },
@@ -113,7 +113,7 @@ class AuthConfirmView(views.APIView):
                     'message': 'Успешная авторизация.',
                     'is_accept': user.profile.is_accept,
                     'token': token,
-                    'student': {
+                    'profile': {
                         'fio': student['fio'],
                         'info': student['info'],
                     },
