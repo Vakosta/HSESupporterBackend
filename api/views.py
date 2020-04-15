@@ -97,6 +97,7 @@ class AuthConfirmView(views.APIView):
                         'is_accept': user.profile.is_accept,
                         'token': token,
                         'profile': {
+                            'id': user.id,
                             'fio': 'Главарь',
                             'info': 'Главарей',
                             'role': 'agent',
@@ -133,6 +134,7 @@ class AuthConfirmView(views.APIView):
                     'is_accept': user.profile.is_accept,
                     'token': token,
                     'profile': {
+                        'id': user.id,
                         'fio': student['fio'],
                         'info': student['info'],
                         'role': 'student',
