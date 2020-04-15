@@ -98,8 +98,8 @@ class AuthConfirmView(views.APIView):
                         'token': token,
                         'profile': {
                             'id': user.id,
-                            'fio': 'Главарь',
-                            'info': 'Главарей',
+                            'fio': 'Евгеньев Евгений Евгеньевич',
+                            'info': 'Босс',
                             'role': 'agent',
                         },
                     }, status=status.HTTP_200_OK)
