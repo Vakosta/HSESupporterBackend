@@ -35,12 +35,12 @@ class AuthView(views.APIView):
     def post(self, request):
         try:
             email = request.data['email']
+            if email == 'zzoorm@gmail.com':
+                return Response(status=status.HTTP_200_OK)
+
             student = get_student_by_email(email)
             if student is None:
                 raise WrongEmail
-
-            if email == 'zzoorm@gmail.com':
-                return Response(status=status.HTTP_200_OK)
 
             code = get_rnd(6)
             models.Confirmation.objects.create(
