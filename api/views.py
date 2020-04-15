@@ -67,6 +67,7 @@ class AuthView(views.APIView):
                     'profile': {
                         'fio': student['fio'],
                         'info': student['info'],
+                        'role': 'student',
                     },
                 },
                 status=status.HTTP_200_OK)
@@ -98,6 +99,7 @@ class AuthConfirmView(views.APIView):
                         'profile': {
                             'fio': 'Главарь',
                             'info': 'Главарей',
+                            'role': 'agent',
                         },
                     }, status=status.HTTP_200_OK)
 
@@ -133,6 +135,7 @@ class AuthConfirmView(views.APIView):
                     'profile': {
                         'fio': student['fio'],
                         'info': student['info'],
+                        'role': 'student',
                     },
                 }, status=status.HTTP_200_OK)
 
