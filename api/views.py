@@ -95,6 +95,10 @@ class AuthConfirmView(views.APIView):
                         'message': 'Успешная авторизация.',
                         'is_accept': user.profile.is_accept,
                         'token': token,
+                        'profile': {
+                            'fio': 'Главарь',
+                            'info': 'Главарей',
+                        },
                     }, status=status.HTTP_200_OK)
 
             student = get_student_by_email(email)
