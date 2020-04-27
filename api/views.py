@@ -42,6 +42,9 @@ class AuthView(views.APIView):
             if student is None:
                 raise WrongEmail
 
+            first_name = student['fio'].split(' ')[1]
+            last_name = student['fio'].split(' ')[0]
+
             code = get_rnd(6)
             models.Confirmation.objects.create(
                 email=email,
@@ -52,7 +55,9 @@ class AuthView(views.APIView):
                 User.objects.create_user(
                     email=email,
                     username=email,
-                    password='thisishadrkey'
+                    first_name=first_name,
+                    last_name=last_name,
+                    password='thisisejkflkwefmlkwlkefklkjwenf21829834hadrkey'
                 )
 
             send_mail('Код подтверждения',
@@ -65,7 +70,8 @@ class AuthView(views.APIView):
                 {
                     'message': 'Код подтверждения отправлен на почту.',
                     'profile': {
-                        'fio': student['fio'],
+                        'first_name': first_name,
+                        'last_name': last_name,
                         'info': student['info'],
                         'role': 'student',
                     },
@@ -135,7 +141,8 @@ class AuthConfirmView(views.APIView):
                     'token': token,
                     'profile': {
                         'id': user.id,
-                        'fio': student['fio'],
+                        'first_name': user.first_name,
+                        'last_name': user.last_name,
                         'info': student['info'],
                         'role': 'student',
                     },
@@ -168,7 +175,7 @@ class ProfileView(views.APIView):
                         'id': user.id,
                         'first_name': user.first_name,
                         'last_name': user.last_name,
-                        'dormirory': str(user.profile.dormitory),
+                        'dormitory': str(user.profile.dormitory),
                         'role': user.profile.role,
                     },
                 }, status=status.HTTP_200_OK)
