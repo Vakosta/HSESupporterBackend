@@ -154,6 +154,31 @@ class AuthConfirmView(views.APIView):
             return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
+class ProfileView(views.APIView):
+    def get(self, request):
+        try:
+            user = request.user
+            if user.id is None:
+                raise Unauthorized
+
+            return Response(
+                {
+                    'is_accept': user.profile.is_accept,
+                    'profile': {
+                        'id': user.id,
+                        'first_name': user.first_name,
+                        'last_name': user.last_name,
+                        'dormirory': str(user.profile.dormitory),
+                        'role': user.profile.role,
+                    },
+                }, status=status.HTTP_200_OK)
+
+        except Unauthorized as e:
+            return Response({
+                'message': e.default_detail
+            }, status=e.status_code)
+
+
 class AcceptStatusView(views.APIView):
     def get(self, request):
         try:

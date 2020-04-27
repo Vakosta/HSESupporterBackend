@@ -19,5 +19,7 @@ urlpatterns = [
     path('auth/register/confirm-email/', views.AuthConfirmView.as_view()),
     path('auth/accept-status/', views.AcceptStatusView.as_view()),
 
+    path('profile/', views.ProfileView.as_view()),
+
     path('auth/', include('djoser.urls.authtoken')),
 ]

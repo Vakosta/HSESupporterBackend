@@ -108,6 +108,10 @@ class Notice(models.Model):
 
 
 class Profile(models.Model):
+    class Role(models.TextChoices):
+        STUDENT = 'student', 'Студент'
+        AGENT = 'agent', 'Агент поддержки'
+
     user = models.OneToOneField(verbose_name='пользователь',
                                 to=User,
                                 on_delete=models.CASCADE)
@@ -116,6 +120,15 @@ class Profile(models.Model):
                                   null=True,
                                   blank=True,
                                   on_delete=models.CASCADE)
+    room = models.CharField(verbose_name='комната',
+                            null=True,
+                            blank=True,
+                            max_length=20)
+
+    role = models.CharField(verbose_name='роль',
+                            max_length=20,
+                            choices=Role.choices,
+                            default=Role.STUDENT)
 
     is_login = models.BooleanField(verbose_name='был ли первый вход',
                                    default=False)
