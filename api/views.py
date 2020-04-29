@@ -144,6 +144,8 @@ class AuthConfirmView(views.APIView):
                         'first_name': user.first_name,
                         'last_name': user.last_name,
                         'info': student['info'],
+                        'dormitory_id': str(user.profile.dormitory.id),
+                        'dormitory_name': str(user.profile.dormitory.name),
                         'role': 'student',
                     },
                 }, status=status.HTTP_200_OK)
@@ -170,14 +172,12 @@ class ProfileView(views.APIView):
 
             return Response(
                 {
-                    'is_accept': user.profile.is_accept,
-                    'profile': {
-                        'id': user.id,
-                        'first_name': user.first_name,
-                        'last_name': user.last_name,
-                        'dormitory': str(user.profile.dormitory),
-                        'role': user.profile.role,
-                    },
+                    'id': user.id,
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
+                    'dormitory_id': str(user.profile.dormitory.id),
+                    'dormitory_name': str(user.profile.dormitory.name),
+                    'role': user.profile.role,
                 }, status=status.HTTP_200_OK)
 
         except Unauthorized as e:
