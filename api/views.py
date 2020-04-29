@@ -185,6 +185,43 @@ class ProfileView(views.APIView):
                 'message': e.default_detail
             }, status=e.status_code)
 
+    def post(self, request):
+        try:
+            dormitory_id = request.data['dormitory_id']
+            room = request.data['room']
+
+            user = request.user
+            if user.id is None:
+                raise Unauthorized
+
+            dormitory = models.Dormitory.objects.get(id=dormitory_id)
+
+            if user.profile.dormitory_id != dormitory_id:
+                user.profile.dormitory = dormitory
+            if user.profile.room != room:
+                user.profile.room = room
+
+            user.save()
+
+            return Response({
+                'message': 'ok'
+            }, status=status.HTTP_200_OK)
+
+        except KeyError as e:
+            return Response({
+                'message': str(e)
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        except Unauthorized as e:
+            return Response({
+                'message': e.default_detail
+            }, status=e.status_code)
+
+        except Exception as e:
+            return Response({
+                'message': str(e)
+            }, status=status.HTTP_400_BAD_REQUEST)
+
 
 class AcceptStatusView(views.APIView):
     def get(self, request):
