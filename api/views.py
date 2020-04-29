@@ -195,11 +195,11 @@ class ProfileView(views.APIView):
                     'first_name': user.first_name,
                     'last_name': user.last_name,
                     'role': user.profile.role,
+                    'room': user.profile.room,
                     'dormitory': {
                         'dormitory_id': user.profile.dormitory_id,
                         'dormitory_name': dormitory_name,
                         'dormitory_address': dormitory_address,
-                        'room': user.profile.room,
                     },
                     'additional_info': additional_info,
                 }, status=status.HTTP_200_OK)
