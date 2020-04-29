@@ -211,16 +211,16 @@ class ProfileView(views.APIView):
 
     def post(self, request):
         try:
-            dormitory_id = request.data['dormitory_id']
+            dormitory_name = request.data['dormitory']
             room = request.data['room']
 
             user = request.user
             if user.id is None:
                 raise Unauthorized
 
-            dormitory = models.Dormitory.objects.get(id=dormitory_id)
+            dormitory = models.Dormitory.objects.get(name=dormitory_name)
 
-            if user.profile.dormitory_id != dormitory_id:
+            if user.profile.dormitory.name != dormitory.name:
                 user.profile.dormitory = dormitory
             if user.profile.room != room:
                 user.profile.room = room
