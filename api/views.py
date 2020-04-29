@@ -197,9 +197,9 @@ class ProfileView(views.APIView):
                     'role': user.profile.role,
                     'room': user.profile.room,
                     'dormitory': {
-                        'dormitory_id': user.profile.dormitory_id,
-                        'dormitory_name': dormitory_name,
-                        'dormitory_address': dormitory_address,
+                        'id': user.profile.dormitory_id,
+                        'name': dormitory_name,
+                        'address': dormitory_address,
                     },
                     'additional_info': additional_info,
                 }, status=status.HTTP_200_OK)
