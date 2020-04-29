@@ -166,18 +166,42 @@ class AuthConfirmView(views.APIView):
 class ProfileView(views.APIView):
     def get(self, request):
         try:
+            include_additional_info = False
+            if 'include_additional_info' in request.query_params:
+                include_additional_info = bool(request.query_params['include_additional_info'])
+
             user = request.user
             if user.id is None:
                 raise Unauthorized
+
+            dormitory_name = None
+            if user.profile.dormitory is not None:
+                dormitory_name = str(user.profile.dormitory.name)
+
+            dormitory_address = None
+            if user.profile.dormitory is not None:
+                dormitory_address = str(user.profile.dormitory.address)
+
+            additional_info = None
+            if True:
+                additional_info = {
+                    'dormitory_users_count': len(models.Profile.objects.filter(dormitory_id=user.profile.dormitory_id)),
+                    'agents_online_count': 1,
+                }
 
             return Response(
                 {
                     'id': user.id,
                     'first_name': user.first_name,
                     'last_name': user.last_name,
-                    'dormitory_id': str(user.profile.dormitory.id),
-                    'dormitory_name': str(user.profile.dormitory.name),
                     'role': user.profile.role,
+                    'dormitory': {
+                        'dormitory_id': user.profile.dormitory_id,
+                        'dormitory_name': dormitory_name,
+                        'dormitory_address': dormitory_address,
+                        'room': user.profile.room,
+                    },
+                    'additional_info': additional_info,
                 }, status=status.HTTP_200_OK)
 
         except Unauthorized as e:
