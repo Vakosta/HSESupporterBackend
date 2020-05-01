@@ -82,6 +82,23 @@ class NoticeAdmin(admin.ModelAdmin):
     )
 
 
+@admin.register(models.Event)
+class EventAdmin(admin.ModelAdmin):
+    list_display = (
+        'title',
+        'target_date',
+        'created_at',
+    )
+    search_fields = (
+        'title',
+        'description',
+    )
+    readonly_fields = (
+        'created_at',
+        'updated_at',
+    )
+
+
 @admin.register(models.Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = (

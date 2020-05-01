@@ -247,6 +247,86 @@ class ProfileView(views.APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
 
+class MainPageView(views.APIView):
+    def get(self, request):
+        try:
+            user = request.user
+            if user.id is None:
+                raise Unauthorized
+
+            dormitory_name = None
+            if user.profile.dormitory is not None:
+                dormitory_name = str(user.profile.dormitory.name)
+
+            dormitory_address = None
+            if user.profile.dormitory is not None:
+                dormitory_address = str(user.profile.dormitory.address)
+
+            profile = {
+                'id': user.id,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'role': user.profile.role,
+                'room': user.profile.room,
+                'dormitory': {
+                    'id': user.profile.dormitory_id,
+                    'name': dormitory_name,
+                    'address': dormitory_address,
+                },
+            }
+
+            notice_list = models.Notice.objects.all().order_by('-id')[:10]
+            notices = [{
+                'id': notice.id,
+                'main_text': notice.main_text,
+                'text': notice.text,
+                'is_important': notice.is_important,
+                'created_at': notice.created_at,
+                'updated_at': notice.updated_at
+            } for notice in notice_list]
+
+            event_list = models.Event.objects.all().order_by('-id')[:3]
+            events = [{
+                'id': event.id,
+                'title': event.title,
+                'description': event.description,
+                'target_date': event.target_date,
+                'created_at': event.created_at,
+                'updated_at': event.updated_at
+            } for event in event_list]
+
+            main_questions = [
+                {
+                    'question': 'Как пообедать?',
+                    'answer': 'Для этого нужно получить талон на еду.'
+                },
+                {
+                    'question': 'Как поспать?',
+                    'answer': 'Для этого нужно лечь в кровать и уснуть.'
+                },
+                {
+                    'question': 'Как работать в карантин?',
+                    'answer': 'Для этого нужно взять себя и свой ноутбук в руки.'
+                }
+            ]
+
+            additional_info = {}
+
+            return Response(
+                {
+                    'profile': profile,
+                    'notices': notices,
+                    'events': events,
+                    'main_questions': main_questions,
+                    'additional_info': additional_info,
+                }, status=status.HTTP_200_OK)
+
+        except Unauthorized as e:
+            return Response({
+                'message': e.default_detail
+            }, status=e.status_code)
+
+
 class AcceptStatusView(views.APIView):
     def get(self, request):
         try:

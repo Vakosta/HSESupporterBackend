@@ -101,3 +101,16 @@ class NoticeSerializer(serializers.HyperlinkedModelSerializer):
             'created_at',
             'updated_at'
         ]
+
+
+class EventSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = models.Event
+        fields = [
+            'id',
+            'title',
+            'description',
+            'target_date',
+            'created_at',
+            'updated_at'
+        ]

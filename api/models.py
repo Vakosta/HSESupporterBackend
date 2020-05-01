@@ -107,6 +107,27 @@ class Notice(models.Model):
         return '{}'.format(self.main_text[:25])
 
 
+class Event(models.Model):
+    title = models.CharField(verbose_name='заголовок',
+                             max_length=100)
+    description = models.TextField(verbose_name='описание',
+                                   max_length=10000)
+
+    target_date = models.DateTimeField(verbose_name='дата проведения')
+
+    created_at = models.DateTimeField(verbose_name='дата создания',
+                                      auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name='дата обновление',
+                                      auto_now=True)
+
+    class Meta:
+        verbose_name = 'событие'
+        verbose_name_plural = 'события'
+
+    def __str__(self):
+        return self.title
+
+
 class Profile(models.Model):
     class Role(models.TextChoices):
         STUDENT = 'student', 'Студент'
