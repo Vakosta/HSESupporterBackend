@@ -275,7 +275,7 @@ class MainPageView(views.APIView):
                 },
             }
 
-            notice_list = models.Notice.objects.all().order_by('-id')[:10]
+            notice_list = models.Notice.objects.all().order_by('-created_at')[:10]
             notices = [{
                 'id': notice.id,
                 'main_text': notice.main_text,
@@ -285,7 +285,7 @@ class MainPageView(views.APIView):
                 'updated_at': notice.updated_at
             } for notice in notice_list]
 
-            event_list = models.Event.objects.all().order_by('-id')[:3]
+            event_list = models.Event.objects.all().order_by('target_date')[:3]
             events = [{
                 'id': event.id,
                 'title': event.title,
