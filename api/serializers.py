@@ -42,7 +42,7 @@ class DormitorySerializer(serializers.HyperlinkedModelSerializer):
         ]
 
     def get_messages(self, obj):
-        ordered_queryset = models.Message.objects.filter(dormitory_id=obj.id).order_by('id')[30:]
+        ordered_queryset = reversed(models.Message.objects.filter(dormitory_id=obj.id).order_by('-id')[:30])
         return MessageSerializer(ordered_queryset, many=True, context=self.context).data
 
 
