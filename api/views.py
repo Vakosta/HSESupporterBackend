@@ -144,8 +144,6 @@ class AuthConfirmView(views.APIView):
                         'first_name': user.first_name,
                         'last_name': user.last_name,
                         'info': student['info'],
-                        'dormitory_id': str(user.profile.dormitory.id),
-                        'dormitory_name': str(user.profile.dormitory.name),
                         'role': 'student',
                     },
                 }, status=status.HTTP_200_OK)
@@ -228,7 +226,16 @@ class ProfileView(views.APIView):
             user.save()
 
             return Response({
-                'message': 'ok'
+                'id': user.id,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'role': user.profile.role,
+                'room': user.profile.room,
+                'dormitory': {
+                    'id': user.profile.dormitory_id,
+                    'name': dormitory.name,
+                    'address': dormitory.address,
+                },
             }, status=status.HTTP_200_OK)
 
         except KeyError as e:
