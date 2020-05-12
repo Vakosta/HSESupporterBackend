@@ -387,6 +387,8 @@ class ProblemViewSet(viewsets.ModelViewSet):
         try:
             if request.data['status'] is None:
                 request.data['status'] = models.Problem.Status.OPEN
+            if request.data['title'] is None or request.data['description'] is None:
+                raise exceptions.APIException
 
             models.Problem.objects.create(
                 author=request.user,
