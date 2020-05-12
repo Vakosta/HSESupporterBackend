@@ -83,7 +83,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'd9c8qb2n2vtifk',
         'USER': 'rextircvkkxqdf',
-        'PASSWORD': 'e870039d0f852e3e8a135269f9d46f89d31b5c98a4e1c6908e6dc4460ad2f650',
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD', ''),
         'HOST': 'ec2-54-247-125-38.eu-west-1.compute.amazonaws.com',
         'PORT': '5432',
     }
@@ -123,8 +123,8 @@ USE_TZ = True
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'zzoorm@gmail.com'
-EMAIL_HOST_PASSWORD = 'KoLbasa9116782001'
+EMAIL_HOST_USER = os.environ.get('EMAIL_LOGIN', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD', '')
 DEFAULT_FROM_EMAIL = 'confrim@hse.ru'
 DEFAULT_TO_EMAIL = 'vaannenkov@edu.hse.rur'
 
