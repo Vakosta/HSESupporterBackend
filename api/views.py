@@ -282,7 +282,8 @@ class MainPageView(views.APIView):
                 },
             }
 
-            notice_list = models.Notice.objects.all().order_by('-created_at')[:10]
+            notice_list = models.Notice.objects.all().order_by('-created_at').filter(
+                dormitory_id=self.request.user.profile.dormitory_id)[:10]
             notices = [{
                 'id': notice.id,
                 'main_text': notice.main_text,
@@ -292,7 +293,8 @@ class MainPageView(views.APIView):
                 'updated_at': notice.updated_at
             } for notice in notice_list]
 
-            event_list = models.Event.objects.all().order_by('target_date')[:3]
+            event_list = models.Event.objects.all().order_by('target_date').filter(
+                dormitory_id=self.request.user.profile.dormitory_id)[:3]
             events = [{
                 'id': event.id,
                 'title': event.title,
@@ -454,7 +456,8 @@ class NoticesViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         try:
-            return models.Notice.objects.all().order_by('-id')
+            return models.Notice.objects.all().order_by('-id').filter(
+                dormitory_id=self.request.user.profile.dormitory_id)
         except TypeError:
             raise exceptions.Unauthorized()
 

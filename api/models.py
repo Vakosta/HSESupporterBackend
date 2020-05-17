@@ -93,6 +93,11 @@ class Notice(models.Model):
                             max_length=10000)
     is_important = models.BooleanField(verbose_name='важное ли',
                                        default=False)
+    dormitory = models.ForeignKey(verbose_name='общежитие',
+                                  to=Dormitory,
+                                  null=True,
+                                  blank=True,
+                                  on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(verbose_name='дата создания',
                                       auto_now_add=True)
@@ -112,6 +117,11 @@ class Event(models.Model):
                              max_length=100)
     description = models.TextField(verbose_name='описание',
                                    max_length=10000)
+    dormitory = models.ForeignKey(verbose_name='общежитие',
+                                  to=Dormitory,
+                                  null=True,
+                                  blank=True,
+                                  on_delete=models.CASCADE)
 
     target_date = models.DateTimeField(verbose_name='дата проведения')
 
