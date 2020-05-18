@@ -68,7 +68,11 @@ class ProblemSerializer(serializers.ModelSerializer):
         ]
 
     def get_messages(self, obj):
-        if self.context['request'].user.id == obj.author.id and self.instance.query is None:
+        try:
+            if self.context['request'].user.id == obj.author.id and self.instance.query is None:
+                obj.has_new_messages = False
+                obj.save()
+        except Exception:
             obj.has_new_messages = False
             obj.save()
         ordered_queryset = models.Message.objects.filter(problem_id=obj.id).order_by('id')
