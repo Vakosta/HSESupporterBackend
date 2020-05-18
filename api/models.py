@@ -190,6 +190,12 @@ class Confirmation(models.Model):
         return '{} — {}'.format(self.email, self.code)
 
 
+@receiver(signals.post_save, sender=Message)
+def create_message(sender, instance, created, **kwargs):
+    if created and instance.problem.author_id != instance.author.id:
+        instance.problem.has_new_messages = True
+
+
 @receiver(signals.post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
