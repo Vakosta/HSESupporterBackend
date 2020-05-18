@@ -32,6 +32,8 @@ class Problem(models.Model):
                              max_length=100)
     description = models.TextField(verbose_name='описание проблемы',
                                    max_length=10000)
+    has_new_messages = models.BooleanField(verbose_name='есть ли новые сообщения',
+                                           default=False)
     status = models.CharField(verbose_name='статус',
                               max_length=5,
                               choices=Status.choices,

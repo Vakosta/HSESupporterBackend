@@ -60,6 +60,7 @@ class ProblemSerializer(serializers.ModelSerializer):
             'author_last_name',
             'title',
             'description',
+            'has_new_messages',
             'status',
             'created_at',
             'updated_at',
@@ -67,6 +68,9 @@ class ProblemSerializer(serializers.ModelSerializer):
         ]
 
     def get_messages(self, obj):
+        if self.context['request'].user.id == obj.author.id and self.instance.query is None:
+            obj.has_new_messages = False
+            obj.save()
         ordered_queryset = models.Message.objects.filter(problem_id=obj.id).order_by('id')
         return MessageSerializer(ordered_queryset, many=True, context=self.context).data
 
