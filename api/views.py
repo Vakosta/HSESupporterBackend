@@ -144,7 +144,7 @@ class AuthConfirmView(views.APIView):
                         'first_name': user.first_name,
                         'last_name': user.last_name,
                         'info': student['info'],
-                        'role': 'student',
+                        'role': user.profile.role,
                     },
                 }, status=status.HTTP_200_OK)
 

@@ -21,8 +21,6 @@ class Dormitory(models.Model):
 class Problem(models.Model):
     class Status(models.TextChoices):
         OPEN = 'O', 'Открыта'
-        AGENT_REPLY_PROCESS = 'ARP', 'Ожидание ответа'
-        RESOLVING = 'R', 'Проблема решается'
         CLOSED = 'C', 'Закрыта'
 
     author = models.ForeignKey(verbose_name='автор',
@@ -192,8 +190,11 @@ class Confirmation(models.Model):
 
 @receiver(signals.post_save, sender=Message)
 def create_message(sender, instance, created, **kwargs):
-    if created and instance.problem.author_id != instance.author.id:
-        instance.problem.has_new_messages = True
+    try:
+        if created and instance.problem.author.id != instance.author.id:
+            instance.problem.has_new_messages = True
+    except Exception:
+        pass
 
 
 @receiver(signals.post_save, sender=User)
